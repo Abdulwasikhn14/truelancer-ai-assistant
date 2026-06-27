@@ -1,0 +1,195 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  cursor: none !important;
+}
+
+html {
+  scroll-behavior: auto;
+  background: #ffffff;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: #0A0A0A;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #fff; }
+::-webkit-scrollbar-thumb {
+  background: #E5E7EB;
+  border-radius: 3px;
+}
+
+::selection {
+  background: rgba(2, 132, 199, 0.15);
+  color: #0A0A0A;
+}
+
+.text-display {
+  font-size: clamp(48px, 8vw, 110px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -4px;
+  color: #0A0A0A;
+}
+
+.text-hero {
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -2.5px;
+  color: #0A0A0A;
+}
+
+.accent-text {
+  background: linear-gradient(135deg, #0284C7, #38BDF8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9CA3AF;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* ── Legacy dark-theme helpers kept so dashboard pages don't break ── */
+
+.glass {
+  background: rgba(13, 17, 23, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  border-radius: 16px;
+}
+
+.glass-card {
+  background: rgba(13, 17, 23, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(2, 132, 199, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(2, 132, 199, 0.5);
+  box-shadow: 0 0 30px rgba(2, 132, 199, 0.15);
+  transform: translateY(-2px);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #0284C7, #38BDF8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cool {
+  background: linear-gradient(135deg, #0284C7, #00D4FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0284C7, #38BDF8);
+  color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 8px 30px rgba(2, 132, 199, 0.5), 0 0 60px rgba(2, 132, 199, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #0284C7;
+  padding: 0.5rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: 1px solid #0284C7;
+  cursor: pointer !important;
+  transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(2, 132, 199, 0.1);
+  box-shadow: 0 0 20px rgba(2, 132, 199, 0.3), inset 0 0 8px rgba(2, 132, 199, 0.1);
+  transform: translateY(-1px);
+}
+
+.neon-text {
+  color: #0284C7;
+  text-shadow: 0 0 8px rgba(2,132,199,0.8), 0 0 20px rgba(2,132,199,0.4);
+}
+
+.neon-border {
+  border: 1px solid #0284C7;
+  box-shadow: 0 0 8px rgba(2,132,199,0.4), inset 0 0 8px rgba(2,132,199,0.1);
+}
+
+.bg-orb-purple {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(2,132,199,0.15), transparent);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.bg-orb-pink {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(56,189,248,0.1), transparent);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.bg-orb-cyan {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(0,212,255,0.08), transparent);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.sidebar-active {
+  background: linear-gradient(135deg, rgba(2,132,199,0.2), rgba(56,189,248,0.1));
+  border-left: 3px solid #0284C7;
+  color: #0284C7;
+}
+
+.glow-purple { box-shadow: 0 0 30px rgba(2,132,199,0.2); }
+.glow-pink   { box-shadow: 0 0 30px rgba(255,101,132,0.2); }
+.glow-cyan   { box-shadow: 0 0 30px rgba(0,212,255,0.2); }
