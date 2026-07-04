@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MessageSquare, Plus, Trash2, Bot, Copy, Check,
-  Download, Pencil, X, Send, Sparkles, Menu, ChevronRight,
+  Download, Pencil, Send, Sparkles, Menu, ChevronRight,
 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import api from '../../services/api'

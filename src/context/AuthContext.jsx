@@ -52,7 +52,9 @@ export function AuthProvider({ children }) {
       const response = await api.post('/api/auth/register', { full_name, email, password })
       return { success: true, message: response.data.message }
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed'
+      const message = error.response
+        ? (error.response.data?.message || 'Registration failed')
+        : 'Cannot reach the server. Make sure the backend is running on port 5000.'
       return { success: false, message }
     }
   }, [])

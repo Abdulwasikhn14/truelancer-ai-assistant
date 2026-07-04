@@ -79,7 +79,7 @@ function SectionHeader({ number, title, subtitle }) {
   )
 }
 
-function AnimatedPrice({ value, prefix = '$', suffix = '', className = '', style = {} }) {
+function AnimatedPrice({ value, prefix = '$', suffix = '', style = {} }) {
   const [display, setDisplay] = useState(0)
   const prevRef = useRef(0)
   useEffect(() => {
@@ -273,9 +273,7 @@ function AdvicePanel({ advice, negotiationTips, redFlags }) {
 
 function CompetitiveScale({ marketRates, sweetSpotPrice }) {
   const parseRange = (str) => { if (!str) return [0, 0]; const parts = str.split('-').map((s) => parseInt(s.replace(/\D/g, ''), 10)); return [isNaN(parts[0]) ? 0 : parts[0], isNaN(parts[1]) ? 0 : parts[1]] }
-  const [begMin, begMax] = parseRange(marketRates?.beginner)
-  const [intMin, intMax] = parseRange(marketRates?.intermediate)
-  const [expMin, expMax] = parseRange(marketRates?.expert)
+  const [, expMax] = parseRange(marketRates?.expert)
   const scaleMax = Math.max(expMax * 1.25, sweetSpotPrice * 1.1, 100)
   const toPct = (v) => Math.min(Math.max(((v) / scaleMax) * 100, 0), 100)
   const sweetPct = toPct(sweetSpotPrice)

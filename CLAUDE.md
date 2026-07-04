@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev        # start dev server (localhost:5173)
+npm run dev        # start dev server (localhost:5200)
 npm run build      # production build
 npm run preview    # preview production build
 ```

@@ -1,12 +1,13 @@
 const bcrypt = require('bcryptjs')
 const jwt    = require('jsonwebtoken')
-const { createUser, findUserByEmail, findUserById, updateUser } = require('../models/userModel')
+const { createUser, findUserByEmail, updateUser } = require('../models/userModel')
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const signToken = (id, email) =>
   jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
+// eslint-disable-next-line no-unused-vars -- `password` is intentionally destructured out
 const stripPassword = ({ password, ...safe }) => safe
 
 // ── registerUser ──────────────────────────────────────────────────────────────

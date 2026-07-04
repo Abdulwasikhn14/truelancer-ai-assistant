@@ -16,6 +16,10 @@ dist-ssr
 .env
 .env.*
 server/.env
+server/.env.*
+# ...but keep example templates (no real secrets) in version control
+!.env.example
+!server/.env.example
 
 # Editor directories and files
 .vscode/*

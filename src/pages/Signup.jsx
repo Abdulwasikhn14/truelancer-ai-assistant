@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { User, Mail, Lock, Eye, EyeOff, UserPlus, FileText, Bot, DollarSign, TrendingUp, CheckCircle2 } from 'lucide-react'
 import Logo from '../components/ui/Logo'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../services/api'
 
 // ── Left panel shared config ──────────────────────────────────────────────────
 
@@ -400,7 +401,7 @@ export default function Signup() {
 
               {/* Google */}
               <motion.button
-                onClick={() => { window.location.href = 'http://localhost:5000/api/auth/google' }}
+                onClick={() => { window.location.href = `${API_BASE_URL}/api/auth/google` }}
                 whileHover={{ boxShadow: '0 2px 10px rgba(0,0,0,0.1)', borderColor: '#D1D5DB' }}
                 whileTap={{ scale: 0.98 }}
                 style={{ width: '100%', background: '#ffffff', border: '1px solid #E5E7EB', borderRadius: 8, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontSize: 14, color: '#374151', fontWeight: 500, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', cursor: 'pointer', fontFamily: 'inherit' }}

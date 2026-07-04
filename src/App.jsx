@@ -1,4 +1,5 @@
-﻿import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+﻿import { lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
@@ -7,28 +8,31 @@ import LoadingScreen  from './components/ui/LoadingScreen'
 import CustomCursor   from './components/ui/CustomCursor'
 import CookieBanner   from './components/ui/CookieBanner'
 
-import Landing           from './pages/Landing'
-import Login             from './pages/Login'
-import Signup            from './pages/Signup'
-import GoogleAuthSuccess from './pages/GoogleAuthSuccess'
-import About             from './pages/About'
-import Privacy           from './pages/Privacy'
-import Terms             from './pages/Terms'
-import Cookies           from './pages/Cookies'
-import Contact           from './pages/Contact'
-import HelpCenter        from './pages/HelpCenter'
-import Blog              from './pages/Blog'
-import BlogPost          from './pages/BlogPost'
+// Route-level code-splitting: each page (and its heavy deps like three.js /
+// recharts) loads only when the route is first visited, shrinking initial load.
+const Landing           = lazy(() => import('./pages/Landing'))
+const Login             = lazy(() => import('./pages/Login'))
+const Signup            = lazy(() => import('./pages/Signup'))
+const GoogleAuthSuccess = lazy(() => import('./pages/GoogleAuthSuccess'))
+const About             = lazy(() => import('./pages/About'))
+const Privacy           = lazy(() => import('./pages/Privacy'))
+const Terms             = lazy(() => import('./pages/Terms'))
+const Cookies           = lazy(() => import('./pages/Cookies'))
+const Contact           = lazy(() => import('./pages/Contact'))
+const HelpCenter        = lazy(() => import('./pages/HelpCenter'))
+const Blog              = lazy(() => import('./pages/Blog'))
+const BlogPost          = lazy(() => import('./pages/BlogPost'))
 
-import Dashboard, { DashboardHome } from './pages/dashboard/Dashboard'
-import Proposal  from './pages/dashboard/Proposal'
-import Messages  from './pages/dashboard/Messages'
-import Gig       from './pages/dashboard/Gig'
-import Chatbot   from './pages/dashboard/Chatbot'
-import Pricing   from './pages/dashboard/Pricing'
-import History   from './pages/dashboard/History'
-import Analytics from './pages/dashboard/Analytics'
-import Profile   from './pages/dashboard/Profile'
+const Dashboard     = lazy(() => import('./pages/dashboard/Dashboard'))
+const DashboardHome = lazy(() => import('./pages/dashboard/Dashboard').then(m => ({ default: m.DashboardHome })))
+const Proposal      = lazy(() => import('./pages/dashboard/Proposal'))
+const Messages      = lazy(() => import('./pages/dashboard/Messages'))
+const Gig           = lazy(() => import('./pages/dashboard/Gig'))
+const Chatbot       = lazy(() => import('./pages/dashboard/Chatbot'))
+const Pricing       = lazy(() => import('./pages/dashboard/Pricing'))
+const History       = lazy(() => import('./pages/dashboard/History'))
+const Analytics     = lazy(() => import('./pages/dashboard/Analytics'))
+const Profile       = lazy(() => import('./pages/dashboard/Profile'))
 
 // ── Page transition wrapper ───────────────────────────────────────────────────
 
@@ -61,10 +65,20 @@ function ProtectedRoute({ children }) {
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 
+// Fallback shown while a lazily-loaded route chunk is downloading
+function RouteFallback() {
+  return (
+    <div style={{ minHeight: '100vh', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#0284C7', borderTopColor: 'transparent' }} />
+    </div>
+  )
+}
+
 function AppRoutes() {
   const location = useLocation()
 
   return (
+    <Suspense fallback={<RouteFallback />}>
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public */}
@@ -100,6 +114,7 @@ function AppRoutes() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
+    </Suspense>
   )
 }
 

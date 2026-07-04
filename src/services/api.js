@@ -1,7 +1,11 @@
 import axios from 'axios'
 
+// Base URL of the backend API. Override per-environment with VITE_API_URL
+// (e.g. your deployed API domain); falls back to the local dev server.
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 })
 

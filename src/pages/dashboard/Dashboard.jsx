@@ -5,7 +5,7 @@ import api from '../../services/api'
 import {
   LayoutDashboard, FileText, MessageSquare, Briefcase, Bot,
   DollarSign, BarChart2, Clock, LogOut, Sparkles,
-  Menu, ArrowRight, Plus, Activity, ChevronDown, Lightbulb, X,
+  Menu, Activity, ChevronDown, Lightbulb,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import Logo from '../../components/ui/Logo'
@@ -73,9 +73,6 @@ const ACTIVITY_LABELS = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const getInitials = (name = '') =>
-  name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || '?'
-
 const getGreeting = () => {
   const h = new Date().getHours()
   if (h < 12) return 'Good morning'
@@ -107,23 +104,6 @@ function AnimatedCount({ value, suffix = '' }) {
     return ctrl.stop
   }, [value])
   return <>{display}{suffix}</>
-}
-
-// ── Simple avatar ──────────────────────────────────────────────────────────────
-
-function Av({ name, size = 36 }) {
-  return (
-    <div style={{
-      width: size, height: size, borderRadius: '50%',
-      background: 'linear-gradient(135deg, #0284C7, #38BDF8)',
-      color: 'white', fontWeight: 700,
-      fontSize: size <= 32 ? 11 : 13,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0,
-    }}>
-      {getInitials(name)}
-    </div>
-  )
 }
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────

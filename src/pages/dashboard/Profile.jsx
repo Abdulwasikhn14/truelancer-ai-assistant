@@ -5,7 +5,7 @@ import {
   CheckCircle2, ShieldCheck, Camera, Trash2, Check,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import UserAvatar, { BuiltinAvatar, BUILTIN_AVATARS, getInitials, getAvatarState } from '../../components/ui/UserAvatar'
+import UserAvatar, { BuiltinAvatar, BUILTIN_AVATARS, getAvatarState } from '../../components/ui/UserAvatar'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
