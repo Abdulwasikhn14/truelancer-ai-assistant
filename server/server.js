@@ -14,8 +14,13 @@ const { createUsersTable }       = require('./models/userModel')
 const { createHistoryTable }     = require('./models/historyModel')
 const { createChatSessionsTable } = require('./models/chatSessionModel')
 
-const app  = express()
-const PORT = process.env.PORT || 5000
+const app    = express()
+const PORT   = process.env.PORT || 5000
+const isProd = process.env.NODE_ENV === 'production'
+
+// Behind Render/Vercel/other proxies we must trust the proxy so secure cookies
+// and req.protocol are handled correctly over HTTPS.
+app.set('trust proxy', 1)
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 
@@ -30,7 +35,12 @@ app.use(session({
   secret:            process.env.SESSION_SECRET || 'truelancer_session_secret',
   resave:            false,
   saveUninitialized: false,
-  cookie:            { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // 24 h
+  cookie: {
+    secure:   isProd,                 // HTTPS-only in production
+    httpOnly: true,
+    sameSite: isProd ? 'none' : 'lax', // allow the cross-site OAuth redirect flow
+    maxAge:   24 * 60 * 60 * 1000,     // 24 h
+  },
 }))
 
 app.use(passport.initialize())
