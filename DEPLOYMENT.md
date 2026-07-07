@@ -1,89 +1,121 @@
-# Deployment Guide — Vercel (frontend) + Render (API + PostgreSQL)
+# Deployment Guide — Hostinger + Render + Neon (no credit card)
 
-This app has three parts:
+Three pieces, three free homes:
 
-- **Frontend** — Vite/React SPA → **Vercel**
-- **Backend** — Express API → **Render** (web service)
-- **Database** — PostgreSQL → **Render** (managed database)
+- **Frontend** — Vite/React SPA → **Hostinger** (Business Web Hosting, `public_html`)
+- **Backend** — Express API → **Render** (free web service, no card)
+- **Database** — PostgreSQL → **Neon** (free, no card)
 
-The repo already contains everything needed: `vercel.json` (SPA routing) and
-`render.yaml` (API + database blueprint). Follow the steps in order.
+Do the steps **in order** — the frontend build needs the API URL, and the API
+needs the database URL.
 
 ---
 
-## 0. Before you start — gather secrets
+## 0. Get your secrets ready
 
-You'll need these ready to paste:
-
-| Secret | Where to get it |
+| Secret | Where |
 |---|---|
-| `GROQ_API_KEY` | https://console.groq.com → API Keys |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google Cloud Console → APIs & Services → Credentials (only if you use "Sign in with Google") |
-
-`JWT_SECRET` and `SESSION_SECRET` are generated automatically by Render — you don't need to create them.
+| `GROQ_API_KEY` | https://console.groq.com → API Keys (needed for AI tools) |
+| Google OAuth (optional) | Google Cloud Console → Credentials (only if using "Sign in with Google") |
 
 ---
 
-## 1. Deploy the backend + database on Render
+## 1. Database — Neon (free, no card)
+
+1. Go to **https://neon.tech** → sign up (GitHub login is fine) → **Create project**.
+2. Name it anything (e.g. `truelancer`), pick a region near you → **Create**.
+3. On the project dashboard, click **Connect** and copy the **connection string**.
+   It looks like:
+   ```
+   postgresql://user:password@ep-xxxx.region.aws.neon.tech/neondb?sslmode=require
+   ```
+4. Keep this handy — it's your `DATABASE_URL`.
+
+> No card required. The app auto-creates its tables on first boot.
+
+---
+
+## 2. Backend API — Render (free web service, no card)
 
 1. Go to **https://dashboard.render.com** → **New +** → **Blueprint**.
-2. Connect your GitHub and select **`Abdulwasikhn14/truelancer-ai-assistant`**.
-3. Render reads `render.yaml` and shows a web service **`truelancer-api`** + database **`truelancer-db`**. Click **Apply**.
-4. The database provisions and the API starts building. When the web service is
-   live, copy its URL — it looks like **`https://truelancer-api.onrender.com`**.
-5. Open the **`truelancer-api`** service → **Environment** and fill the secrets
-   that were left blank (`sync: false`):
+2. Select your repo **`Abdulwasikhn14/truelancer-ai-assistant`** → Render reads
+   `render.yaml` and shows one **web service** `truelancer-api` (no database — good,
+   that's why there's no card prompt).
+3. Click **Apply / Create**.
+4. Open the **`truelancer-api`** service → **Environment**, and set the blank
+   (`sync:false`) values:
+   - `DATABASE_URL` = your Neon connection string from Step 1
    - `GROQ_API_KEY` = your Groq key
-   - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` = your Google creds (skip if not using Google login)
-   - Leave `FRONTEND_URL` and `GOOGLE_CALLBACK_URL` for **Step 3** (we need the Vercel URL first).
+   - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` = Google creds (skip if unused)
+   - Leave `FRONTEND_URL` and `GOOGLE_CALLBACK_URL` blank for now.
+5. Save → it deploys. Copy the service URL, e.g. **`https://truelancer-api.onrender.com`**.
+6. Sanity check: open that URL — you should see `{"message":"Truelancer API is running"}`,
+   and the **Logs** tab should show `PostgreSQL connected`.
 
-> The `DATABASE_URL`, `JWT_SECRET`, and `SESSION_SECRET` are already wired/generated automatically.
-
----
-
-## 2. Deploy the frontend on Vercel
-
-1. Go to **https://vercel.com** → **Add New… → Project** → import the same GitHub repo.
-2. Vercel auto-detects Vite. Leave the defaults (Build `vite build`, Output `dist`).
-3. Under **Environment Variables**, add:
-   - `VITE_API_URL` = your Render API URL from Step 1 (e.g. `https://truelancer-api.onrender.com`) — **no trailing slash**.
-4. Click **Deploy**. When it's done, copy your Vercel URL (e.g. `https://truelancer.vercel.app`).
+> `JWT_SECRET` and `SESSION_SECRET` are generated automatically.
 
 ---
 
-## 3. Connect the two (fixes CORS + OAuth)
+## 3. Frontend — build with the API URL, upload to Hostinger
 
-Back on Render → **`truelancer-api`** → **Environment**, set:
+On your computer, in the project folder:
 
-- `FRONTEND_URL` = your Vercel URL (e.g. `https://truelancer.vercel.app`) — **no trailing slash**
+```bash
+# Windows PowerShell
+$env:VITE_API_URL = "https://truelancer-api.onrender.com"   # your Render URL, no trailing slash
+npm install
+npm run build
+```
+
+This produces a **`dist/`** folder (it already includes the `.htaccess` for SPA routing).
+
+Then upload it to Hostinger:
+
+1. hPanel → **Files → File Manager** (or use FTP).
+2. Open **`public_html`**. If deploying to your main domain, delete the default
+   `default.php`/placeholder files already there.
+3. Upload **everything inside `dist/`** (not the `dist` folder itself) into
+   `public_html` — including the hidden **`.htaccess`**.
+   - In File Manager, use **Upload** and select all files; to include `.htaccess`,
+     enable "show hidden files" or upload the zip and extract.
+   - Tip: zip the *contents* of `dist`, upload the zip, then **Extract** in `public_html`.
+4. Visit your domain — the site should load. Refreshing `/dashboard` should work
+   (that's the `.htaccess` doing its job).
+
+---
+
+## 4. Connect them (CORS + OAuth)
+
+Back on Render → **`truelancer-api`** → **Environment**:
+
+- `FRONTEND_URL` = your Hostinger site URL (e.g. `https://yourdomain.com`) — **no trailing slash**
 - `GOOGLE_CALLBACK_URL` = `https://truelancer-api.onrender.com/api/auth/google/callback`
 
-Save → Render redeploys automatically.
+Save → Render redeploys.
 
-### If you use Google login
-In **Google Cloud Console → Credentials → your OAuth client**, add:
-
+### If using Google login
+Google Cloud Console → your OAuth client → add:
 - **Authorized redirect URI:** `https://truelancer-api.onrender.com/api/auth/google/callback`
-- **Authorized JavaScript origin:** `https://truelancer.vercel.app`
+- **Authorized JavaScript origin:** `https://yourdomain.com`
 
 ---
 
-## 4. Verify
+## 5. Verify
 
-1. Open the Render API URL directly → you should see `{"message":"Truelancer API is running"}`.
-2. Open your Vercel URL → sign up / log in → try a tool (Proposal, Chatbot, etc.).
-3. Check the Render **Logs** tab for `PostgreSQL connected` and `Server running on port …`.
+1. Open your Hostinger domain → sign up / log in.
+2. Try a tool (Proposal, Chatbot, Pricing). If it responds, the whole chain works.
+3. If something fails, check Render **Logs** and your browser **DevTools → Network** tab.
 
 ---
 
-## Notes & gotchas
+## Updating later
 
-- **Render free tier sleeps** after ~15 min idle; the first request afterward
-  takes ~30–50s to wake. Fine for demos; upgrade for always-on.
-- **Trailing slashes matter** — `FRONTEND_URL` / `VITE_API_URL` must not end in `/`,
-  or CORS will reject requests.
-- **Env changes require a redeploy.** Render redeploys on save; on Vercel, changing
-  an env var needs a **Redeploy** from the Deployments tab.
-- **Auto-deploys:** both platforms redeploy automatically on every push to `main`.
-- **Local dev** is unchanged: copy `.env.example` → `.env` in both root and `server/`,
-  run the API (`cd server && npm run dev`) and the app (`npm run dev`).
+- **Frontend change:** re-run `npm run build` and re-upload `dist/` to `public_html`.
+  (Hostinger shared hosting has no git auto-deploy — it's a manual upload each time.)
+- **Backend change:** just `git push` — Render auto-redeploys from `main`.
+
+## Gotchas
+
+- **Render free tier sleeps** after ~15 min idle; first request then takes ~30–50s to wake.
+- **No trailing slashes** on `VITE_API_URL` / `FRONTEND_URL`, or CORS will reject requests.
+- **`VITE_API_URL` is baked in at build time** — if the API URL changes, rebuild and re-upload the frontend.

@@ -1,0 +1,22 @@
+# Hostinger (Apache/LiteSpeed) — Single Page App routing.
+# Without this, refreshing /dashboard or /login returns a 404 because those
+# paths only exist inside the React app, not as real files.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Serve real files and directories as-is (assets, images, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else falls back to the SPA entry point
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Long-cache the fingerprinted assets Vite emits under /assets
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2?|png|jpg|jpeg|svg|webp|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
