@@ -385,7 +385,7 @@ export default function Pricing() {
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', background: '#ffffff' }}>
+        <div data-lenis-prevent style={{ flex: 1, overflowY: 'auto', background: '#ffffff' }}>
           {/* Section 1 */}
           <div style={{ ...sectionPad, ...sectionBorder }}>
             <SectionHeader number="1" title="Project Details" subtitle="What are you being hired to do?" />
@@ -507,9 +507,9 @@ export default function Pricing() {
             </motion.span>
           )}
         </div>
-        <div style={{ flex: 1, overflowY: 'auto', background: '#FAFAFA' }}>
+        <div data-lenis-prevent style={{ flex: 1, overflowY: 'auto', background: '#FAFAFA' }}>
           <AnimatePresence mode="wait">
-            {status === 'idle'    && <motion.div key="empty"   style={{ height: '100%', display: 'flex', alignItems: 'center' }}><EmptyState /></motion.div>}
+            {status === 'idle'    && <motion.div key="empty"   style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><EmptyState /></motion.div>}
             {status === 'loading' && <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><SkeletonLoader /></motion.div>}
             {status === 'done' && result && <ResultsPanel key="results" result={result} selectedPlatforms={form.platforms} />}
           </AnimatePresence>

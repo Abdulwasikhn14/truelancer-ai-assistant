@@ -238,7 +238,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div style={{
+      <div className="hero-scroll" style={{
         position:      'absolute',
         bottom:        32,
         left:          '50%',
@@ -258,9 +258,10 @@ export default function Hero() {
 
       <style>{`
         @media (max-width: 900px) {
-          .hero-section { padding: 100px 32px 80px !important; }
+          .hero-section { min-height: auto !important; align-items: flex-start !important; padding: 104px 32px 64px !important; }
           .hero-right   { display: none !important; }
           .hero-left    { flex: none !important; width: 100% !important; padding-right: 0 !important; }
+          .hero-scroll  { display: none !important; }
         }
       `}</style>
     </section>

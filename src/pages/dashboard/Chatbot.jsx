@@ -134,19 +134,19 @@ export default function Chatbot() {
       style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
 
       {/* Top bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', borderBottom: '1px solid #F3F4F6', background: '#ffffff', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ position: 'relative' }}>
+      <div className="chatbot-topbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '12px 24px', borderBottom: '1px solid #F3F4F6', background: '#ffffff', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #0284C7, #38BDF8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Bot style={{ width: 20, height: 20, color: 'white' }} />
             </div>
             <motion.span animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 2, repeat: Infinity }}
               style={{ position: 'absolute', bottom: 0, right: 0, width: 10, height: 10, background: '#10B981', borderRadius: '50%', border: '2px solid white' }} />
           </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#0A0A0A', margin: 0 }}>Truelancer AI Assistant</h2>
-              <span style={{ fontSize: 10, fontWeight: 600, background: 'rgba(2,132,199,0.08)', border: '1px solid rgba(2,132,199,0.2)', color: '#0284C7', padding: '2px 8px', borderRadius: 99 }}>Claude AI</span>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#0A0A0A', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Truelancer AI Assistant</h2>
+              <span style={{ fontSize: 10, fontWeight: 600, background: 'rgba(2,132,199,0.08)', border: '1px solid rgba(2,132,199,0.2)', color: '#0284C7', padding: '2px 8px', borderRadius: 99, whiteSpace: 'nowrap', flexShrink: 0 }}>Claude AI</span>
             </div>
             <p style={{ fontSize: 12, color: '#10B981', margin: '2px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
               <span style={{ width: 6, height: 6, background: '#10B981', borderRadius: '50%', display: 'inline-block' }} />
@@ -155,11 +155,11 @@ export default function Chatbot() {
           </div>
         </div>
         <motion.button onClick={clearChat} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.94 }}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#6B7280', border: '1px solid #E5E7EB', background: '#ffffff', padding: '8px 12px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#6B7280', border: '1px solid #E5E7EB', background: '#ffffff', padding: '8px 12px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0 }}
           onMouseEnter={e => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
           onMouseLeave={e => { e.currentTarget.style.color = '#6B7280'; e.currentTarget.style.borderColor = '#E5E7EB' }}
         >
-          <Trash2 style={{ width: 14, height: 14 }} /> Clear chat
+          <Trash2 style={{ width: 14, height: 14, flexShrink: 0 }} /> <span className="clear-label">Clear chat</span>
         </motion.button>
       </div>
 
@@ -232,7 +232,15 @@ export default function Chatbot() {
         </p>
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg) } }
+        @media (max-width: 640px) {
+          .chatbot-topbar { padding: 12px 16px !important; }
+        }
+        @media (max-width: 380px) {
+          .clear-label { display: none; }
+        }
+      `}</style>
     </motion.div>
   )
 }

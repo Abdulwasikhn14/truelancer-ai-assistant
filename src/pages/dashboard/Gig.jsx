@@ -374,7 +374,7 @@ function ProTipsCard({ tips }) {
 function OutputView({ result, selectedTitle, setSelectedTitle, onRegenerate, onCopyAll, onReset, isRegenerating }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
+      <div data-lenis-prevent style={{ flex: 1, overflowY: 'auto' }}>
         <div style={{ maxWidth: 720, margin: '0 auto', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <TitleCard titles={result.titles} selectedTitle={selectedTitle} setSelectedTitle={setSelectedTitle} />
           <DescriptionCard description={result.description} />
@@ -452,7 +452,7 @@ export default function Gig() {
     <div style={{ position: 'relative', height: 'calc(100vh - 64px)', overflow: 'hidden', background: '#FAFAFA' }}>
       <AnimatePresence mode="wait">
         {status === 'idle' && (
-          <motion.div key="input" style={{ position: 'absolute', inset: 0, overflowY: 'auto' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
+          <motion.div key="input" data-lenis-prevent style={{ position: 'absolute', inset: 0, overflowY: 'auto' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
             <InputView skill={skill} setSkill={setSkill} experienceLevel={experienceLevel} setExperienceLevel={setExperienceLevel} platform={platform} setPlatform={setPlatform} onGenerate={handleGenerate} />
           </motion.div>
         )}

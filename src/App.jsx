@@ -5,7 +5,6 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import SmoothScroll   from './components/ui/SmoothScroll'
 import LoadingScreen  from './components/ui/LoadingScreen'
-import CustomCursor   from './components/ui/CustomCursor'
 import CookieBanner   from './components/ui/CookieBanner'
 
 // Route-level code-splitting: each page (and its heavy deps like three.js /
@@ -124,7 +123,6 @@ export default function App() {
   return (
     <SmoothScroll>
       <LoadingScreen />
-      <CustomCursor />
       <BrowserRouter>
         <AuthProvider>
           <AppRoutes />

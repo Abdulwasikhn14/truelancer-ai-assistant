@@ -1,11 +1,20 @@
-﻿import { useEffect, useRef } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
 export default function CustomCursor() {
   const dotRef  = useRef(null)
   const ringRef = useRef(null)
+  // Only render the custom cursor on devices with a fine, hover-capable pointer
+  // (a real mouse). On touch/mobile there is no pointer to follow, so it would
+  // just hang frozen on screen.
+  const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
+    setEnabled(window.matchMedia('(hover: hover) and (pointer: fine)').matches)
+  }, [])
+
+  useEffect(() => {
+    if (!enabled) return
     const dot  = dotRef.current
     const ring = ringRef.current
     if (!dot || !ring) return
@@ -57,7 +66,9 @@ export default function CustomCursor() {
       window.removeEventListener('mouseup',   onMouseUp)
       observer.disconnect()
     }
-  }, [])
+  }, [enabled])
+
+  if (!enabled) return null
 
   return (
     <>

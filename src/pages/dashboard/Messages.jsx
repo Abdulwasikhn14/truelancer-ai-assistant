@@ -209,13 +209,24 @@ export default function Messages() {
   const [chatTitle,      setChatTitle]      = useState('New Chat')
   const [isRenaming,     setIsRenaming]     = useState(false)
   const [renameValue,    setRenameValue]    = useState('')
-  const [sidebarOpen,    setSidebarOpen]    = useState(true)
+  const [sidebarOpen,    setSidebarOpen]    = useState(() => typeof window === 'undefined' || window.innerWidth >= 768)
+  const [isMobile,       setIsMobile]       = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
   const [deleteConfirm,  setDeleteConfirm]  = useState(null)
 
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
   const renameRef = useRef(null)
   const taRef     = useRef(null)
+
+  // Track viewport: on mobile the sidebar becomes an overlay drawer (closed by
+  // default) so the chat panel gets the full width instead of being crushed.
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const apply = () => { setIsMobile(mq.matches); setSidebarOpen(!mq.matches) }
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, isTyping])
   useEffect(() => { if (isRenaming) renameRef.current?.focus() }, [isRenaming])
@@ -290,15 +301,25 @@ export default function Messages() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
-      style={{ display: 'flex', overflow: 'hidden', height: 'calc(100vh - 64px)' }}>
+      style={{ display: 'flex', overflow: 'hidden', height: 'calc(100vh - 64px)', position: 'relative' }}>
+
+      {/* Mobile overlay backdrop */}
+      <AnimatePresence>
+        {isMobile && sidebarOpen && (
+          <motion.div key="sidebar-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+            onClick={() => setSidebarOpen(false)}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.35)', zIndex: 30 }} />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <AnimatePresence initial={false}>
         {sidebarOpen && (
           <motion.aside initial={{ width: 0, opacity: 0 }} animate={{ width: 260, opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            style={{ flexShrink: 0, borderRight: '1px solid #F3F4F6', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#ffffff' }}>
+            style={{ flexShrink: 0, borderRight: '1px solid #F3F4F6', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#ffffff',
+              ...(isMobile ? { position: 'absolute', top: 0, bottom: 0, left: 0, zIndex: 40, boxShadow: '0 10px 40px rgba(0,0,0,0.18)' } : {}) }}>
             <div style={{ padding: 12, borderBottom: '1px solid #F3F4F6', flexShrink: 0 }}>
-              <motion.button onClick={startNewChat} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+              <motion.button onClick={() => { startNewChat(); if (isMobile) setSidebarOpen(false) }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 16px', borderRadius: 10, background: 'linear-gradient(135deg, #0284C7, #38BDF8)', border: 'none', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 <Plus style={{ width: 16, height: 16 }} /> New Chat
               </motion.button>
@@ -319,7 +340,7 @@ export default function Messages() {
               <AnimatePresence>
                 {sessions.map((session, index) => (
                   <SessionCard key={session.id} session={session} index={index} isActive={session.id === activeId}
-                    onSelect={() => loadSession(session)} onDelete={(id) => setDeleteConfirm(id)} />
+                    onSelect={() => { loadSession(session); if (isMobile) setSidebarOpen(false) }} onDelete={(id) => setDeleteConfirm(id)} />
                 ))}
               </AnimatePresence>
             </div>

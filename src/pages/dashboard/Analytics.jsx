@@ -149,7 +149,7 @@ export default function Analytics() {
   const CHART_STYLE = { backgroundColor: 'transparent', fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
+    <motion.div className="analytics-page" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
       style={{ padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 32 }}>
 
       <div>
@@ -183,7 +183,7 @@ export default function Analytics() {
       </div>
 
       {/* Charts row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20 }}>
+      <div className="analytics-2col" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20 }}>
         <motion.div {...fadeUp(0.28)}>
           <ChartCard>
             <SectionHeader icon={TrendingUp} title="Daily Activity" subtitle="Last 7 days · all tools" />
@@ -265,7 +265,7 @@ export default function Analytics() {
       </motion.div>
 
       {/* Bottom row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 20 }}>
+      <div className="analytics-2col" style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 20 }}>
         <motion.div {...fadeUp(0.52)}>
           <ChartCard>
             <SectionHeader icon={Activity} title="Recent Activity" subtitle="Your latest generated content" />
@@ -316,6 +316,13 @@ export default function Analytics() {
           </ChartCard>
         </motion.div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .analytics-page { padding: 20px 16px !important; }
+          .analytics-2col { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </motion.div>
   )
 }
